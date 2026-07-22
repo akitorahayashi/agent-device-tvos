@@ -1,8 +1,8 @@
 {
-  "name": "example-plugin",
+  "name": "agent-device-tvos",
   "version": "0.1.0",
-  "description": "Replace this with your plugin's description.",
+  "description": "Drives and debugs tvOS apps on Apple TV devices and simulators with agent-device: launch, focus-engine navigation via tv-remote, screenshot, and evidence capture. tvOS has no coordinate tap; all interaction goes through the focus engine.",
   "author": {
-    "name": "your-name"
+    "name": "akitorahayashi"
   }
 }
