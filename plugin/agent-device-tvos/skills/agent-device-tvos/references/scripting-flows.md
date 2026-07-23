@@ -1,6 +1,6 @@
 # batchフロー
 
-`batch [--steps <json> | --steps-file <path>] [--on-error stop] [--max-steps <n>]` は複数コマンドを1つのdaemonリクエストで実行する。tv-remoteのステップもそのまま乗る（sim実測: 1ステップ200ms台で、対話的なCLI実行より速い）。
+`batch [--steps <json> | --steps-file <path>] [--on-error stop] [--max-steps <n>]` は複数コマンドを1つのdaemonリクエストで実行する。tv-remoteのステップもそのまま乗る（実測: simは1ステップ200ms台。実機も2ステップ目以降は300ms台だが、初回ステップはランナーのウォームアップで約18秒かかった）。
 
 ## ステップ書式
 

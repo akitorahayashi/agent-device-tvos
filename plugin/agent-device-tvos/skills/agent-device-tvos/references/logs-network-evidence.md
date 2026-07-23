@@ -1,6 +1,6 @@
 # ログ・ネットワーク・イベント証跡
 
-いずれも sim実測（backend=ios-simulator）。実機Apple TVでは未検証。
+特記なき挙動は sim実測（backend=ios-simulator）。実機（backend=ios-device）でも logs clear --restart / logs mark / network dump の機構は動作した（device実測）。
 
 ## アプリログ（logs）
 
@@ -12,7 +12,7 @@
 ## HTTP通信（network dump）
 
 - `network dump [limit] [summary|headers|body|all]` はセッションappログから解析したHTTP(s)通信を返す。ログのストリーミングが前提で、新鮮な通信が要るときは `logs clear --restart` → 再現 → `network dump` の順（コマンド出力自体がこの手順を案内する）。
-- アプリがUnified LoggingへリクエストURL・status・timingを出さない場合は `No recent HTTP(s) entries found.` になる（sim実測: 設定アプリ）。その場合はアプリ側のURLSessionログ実装が無いということで、`logs path` のgrepか、アプリへのログ追加で対応する。
+- アプリがUnified LoggingへリクエストURL・status・timingを出さない場合は `No recent HTTP(s) entries found.` になる（sim実測: 設定アプリ）。実機ではこの制約が支配的で、実際に通信しているアプリでも0件になり得る（device実測: logs clear --restart 直後の通信でも `iOS network dump only sees what the app emits into Unified Logging for this process.`）。その場合はアプリ側のURLSessionログ実装が無いということで、`logs path` のgrepか、アプリへのログ追加で対応する。
 
 ## イベントタイムライン（events）
 

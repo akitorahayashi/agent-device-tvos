@@ -6,16 +6,23 @@ A Claude Code plugin packaging the `agent-device-tvos` skill: driving and debugg
 
 ```text
 agent-device-tvos/
-├── skills/
+├── .claude-plugin/
+│   └── marketplace.json     # distribution catalog pointing at plugin/agent-device-tvos
+├── plugin/
 │   └── agent-device-tvos/
-│       ├── SKILL.md         # skill body; name and trigger come from the frontmatter
-│       └── references/      # topic-specific reference documents loaded on demand
-└── .claude-plugin/
-    ├── plugin.json          # Claude Code manifest
-    └── marketplace.json     # distribution catalog (marketplace)
+│       ├── .claude-plugin/
+│       │   └── plugin.json  # Claude Code manifest
+│       └── skills/
+│           └── agent-device-tvos/
+│               ├── SKILL.md     # skill body; name and trigger come from the frontmatter
+│               └── references/  # topic-specific reference documents loaded on demand
+├── items.md                 # verification item inventory (capability / binding / tier)
+├── tests/                   # auto tier: bun test against the tvOS simulator
+├── scripts/                 # manual tier checklist printer
+└── package.json             # Bun task runner: test / verify-device / check / fix
 ```
 
-Skills under `skills/` are auto-discovered by Claude Code, so `plugin.json` carries only the plugin's identity and metadata.
+Skills under the plugin's `skills/` are auto-discovered by Claude Code, so `plugin.json` carries only the plugin's identity and metadata. The verification harness at the repository root maintains the skill's claims; it is not part of the distributed plugin.
 
 ## Requirements
 

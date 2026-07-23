@@ -1,6 +1,6 @@
 # 値の読み取りと待機（wait / find / get / is）
 
-tvOSでは読み取り系コマンドが2つの経路に分かれ、AXツリーが取れない局面での生死が異なる（sim実測）:
+tvOSでは読み取り系コマンドが2つの経路に分かれ、AXツリーが取れない局面での生死が異なる（sim実測）。実機では静的画面ならAXツリー系も安定して動く（device実測: wait text / find exists / get attrs / is focused すべて成功）が、アニメーション中の画面ではsimと同じ「overwhelming」で死ぬ（visual-truth.md）——経路の使い分けは実機でも維持する:
 
 ```tsv
 経路	コマンド	AXツリーが取れない局面での挙動

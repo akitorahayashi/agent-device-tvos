@@ -7,7 +7,11 @@
   "plugins": [
     {
       "name": "agent-device-tvos",
-      "source": "./",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/akitorahayashi/agent-device-tvos.git",
+        "path": "plugin/agent-device-tvos"
+      },
       "description": "Drives and debugs tvOS apps on Apple TV devices and simulators with agent-device: launch, focus-engine navigation via tv-remote, screenshot, and evidence capture. tvOS has no coordinate tap; all interaction goes through the focus engine."
     }
   ]
