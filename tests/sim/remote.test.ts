@@ -81,20 +81,41 @@ describe('press-efficacy / list-scan（diff による実効判定）', () => {
     expect(changed.out).toContain('pixels differ');
   });
 
-  it('list-scan: 長リストで press down が focus を動かし diff が検出する', async () => {
+  it('list-scan: 有界ループの各 press down が diff で実効と判定される', async () => {
     await gotoScreen('list');
-    const base = path.join(workDir, 'list.png');
-    await ad(['screenshot', base, '--session', SESSION]);
-    await ad(['tv-remote', 'press', 'down', '--session', SESSION]);
-    const changed = await ad([
-      'diff',
-      'screenshot',
-      '--baseline',
-      base,
+    // wait text は仮想化リストの画面外行にもヒットするため（下のテストで固定）、
+    // 走査の進行は各押下の diff（変化あり）で判定する。端到達（diff=match）の
+    // 機構は press-efficacy の壁際検証と同一。
+    const presses = 5;
+    for (let i = 0; i < presses; i++) {
+      const base = path.join(workDir, `scan-${i}.png`);
+      await ad(['screenshot', base, '--session', SESSION]);
+      await ad(['tv-remote', 'press', 'down', '--session', SESSION]);
+      const step = await ad([
+        'diff',
+        'screenshot',
+        '--baseline',
+        base,
+        '--session',
+        SESSION,
+      ]);
+      expect(step.out, `${i + 1}回目のpressが実効していない`).toContain(
+        'pixels differ',
+      );
+    }
+    await gotoRoot();
+  });
+
+  it('list-scan: wait text は仮想化リストの画面外行にもヒットする（到達判定に使えない罠）', async () => {
+    await gotoScreen('list');
+    const offscreen = await ad([
+      'wait',
+      'Row 100',
+      '2000',
       '--session',
       SESSION,
     ]);
-    expect(changed.out).toContain('pixels differ');
+    expect(offscreen.code, '画面外の Row 100 が wait text に見えない').toBe(0);
     await gotoRoot();
   });
 });

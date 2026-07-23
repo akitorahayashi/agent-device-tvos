@@ -34,10 +34,12 @@ export async function simulatorName(): Promise<string> {
   const booted = out
     .split('\n')
     .filter((line) => line.includes('(ios simulator target=tv)'))
-    .find((line) => line.includes('booted=true'));
-  if (!booted)
+    .filter((line) => line.includes('booted=true'));
+  const [only] = booted;
+  if (!only || booted.length !== 1)
     throw new Error(
-      `起動中のtvOSシミュレータがない。.claude/skills/verification-setup の手順でセットアップすること:\n${out}`,
+      `起動中のtvOSシミュレータがちょうど1台である必要がある（現在${booted.length}台）。` +
+        `.claude/skills/verification-setup の手順で整えること:\n${out}`,
     );
-  return (booted.split(' (ios simulator')[0] ?? booted).trim();
+  return (only.split(' (ios simulator')[0] ?? only).trim();
 }

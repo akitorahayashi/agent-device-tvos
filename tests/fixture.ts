@@ -41,14 +41,26 @@ export async function openFixture(): Promise<void> {
     );
 }
 
+async function deepLink(host: string, landingText: string): Promise<void> {
+  const opened = await ad([
+    'open',
+    `${FIXTURE.scheme}://${host}`,
+    '--session',
+    SESSION,
+  ]);
+  if (opened.code !== 0)
+    throw new Error(`deep link ${host} を開けない:\n${opened.out}`);
+  const landed = await ad(['wait', landingText, '--session', SESSION]);
+  if (landed.code !== 0)
+    throw new Error(`deep link ${host} が着地しない:\n${landed.out}`);
+}
+
 // 未知ホストの deep link は onOpenURL で screen=nil となり root に戻る。
 export async function gotoRoot(): Promise<void> {
-  await ad(['open', `${FIXTURE.scheme}://root`, '--session', SESSION]);
-  await ad(['wait', FIXTURE.rootTitle, '--session', SESSION]);
+  await deepLink('root', FIXTURE.rootTitle);
 }
 
 // deep link で画面へ直接着地し、ナビゲーションタイトルで着地を確認する。
 export async function gotoScreen(screen: FixtureScreen): Promise<void> {
-  await ad(['open', `${FIXTURE.scheme}://${screen}`, '--session', SESSION]);
-  await ad(['wait', SCREENS[screen], '--session', SESSION]);
+  await deepLink(screen, SCREENS[screen]);
 }

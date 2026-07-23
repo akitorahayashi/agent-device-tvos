@@ -27,7 +27,13 @@ describe('device-discovery / app-lifecycle / surface-read', () => {
       SESSION,
     ]);
     expect(code).toBe(0);
-    expect(out).toContain('Foreground app:');
+    expect(out).toContain(`Foreground app: ${FIXTURE.bundleId}`);
+  });
+
+  it('app-lifecycle: apps はインストール済みアプリを bundle id 付きで列挙する', async () => {
+    const { code, out } = await ad(['apps', '--session', SESSION]);
+    expect(code).toBe(0);
+    expect(out).toContain(FIXTURE.bundleId);
   });
 
   it('surface-read: wait <ms> は常に動く', async () => {
@@ -96,7 +102,8 @@ describe('batch / session-diagnostics', () => {
 
   it('session-diagnostics: doctor はバージョンとセッションを報告する', async () => {
     const { out } = await ad(['doctor', '--session', SESSION]);
-    expect(out).toContain('agent-device 0.19.3');
+    expect(out).toMatch(/agent-device \d+\.\d+\.\d+/);
+    expect(out).toContain(`Active session ${SESSION}`);
   });
 
   it('session-diagnostics: session list は JSON を返す', async () => {

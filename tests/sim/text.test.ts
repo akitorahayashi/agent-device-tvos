@@ -14,7 +14,7 @@ afterAll(async () => {
 });
 
 describe('keyboard-clipboard', () => {
-  it('keyboard dismiss は非対応の原文を返す', async () => {
+  it('keyboard-clipboard: keyboard dismiss は非対応の原文を返す', async () => {
     const { code, out } = await ad([
       'keyboard',
       'dismiss',
@@ -25,7 +25,7 @@ describe('keyboard-clipboard', () => {
     expect(out).toContain('keyboard is not supported on this device');
   });
 
-  it('clipboard read は sim では pasteboard 接続に失敗する', async () => {
+  it('keyboard-clipboard: clipboard read は sim では pasteboard 接続に失敗する', async () => {
     const { code, out } = await ad(['clipboard', 'read', '--session', SESSION]);
     expect(code).not.toBe(0);
     expect(out).toContain('Unable to connect to device pasteboard');

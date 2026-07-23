@@ -59,7 +59,7 @@ describe('items.md の整合性', () => {
     }
   });
 
-  it('auto 行の test ファイルが実在し、その中に id が現れる', () => {
+  it('auto 行の test ファイルが実在し、id を冠したテスト（it）を含む', () => {
     for (const item of items) {
       if (item.tier !== 'auto') continue;
       const file = path.join(repoRoot, item.test);
@@ -67,9 +67,10 @@ describe('items.md の整合性', () => {
         true,
       );
       const body = readFileSync(file, 'utf8');
+      const owner = new RegExp(`\\bit\\(\\s*['"]${item.id}: `);
       expect(
-        body.includes(item.id),
-        `${item.id}: ${item.test} 中に id が現れない`,
+        owner.test(body),
+        `${item.id}: ${item.test} に it('${item.id}: ...') が無い（コメント記載では所有と見なさない）`,
       ).toBe(true);
     }
   });
