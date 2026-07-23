@@ -2,14 +2,14 @@
 
 ## セッションモデル
 
-- 1デバイス1セッション。使用中のデバイスに別名セッションで開こうとすると `Error (DEVICE_IN_USE): Device is already in use by session "<name>".` になる（Hintが `--session <name>` での相乗りか `close --session <name>` を案内する。sim実測）。
-- セッション確立後は各コマンドに `--session <name>` を付けるだけで、platform / target / device のバインドが再利用される（sim実測）。
+- 1デバイス1セッション。使用中のデバイスに別名セッションで開こうとすると `Error (DEVICE_IN_USE): Device is already in use by session "<name>".` になる（Hintが `--session <name>` での相乗りか `close --session <name>` を案内する。実測）。
+- セッション確立後は各コマンドに `--session <name>` を付けるだけで、platform / target / device のバインドが再利用される（実測）。
 - 実機Apple TVとシミュレータがデバイス一覧に同時に並ぶため、セッション開設時は `--device <名前>` を必ず明示する。`--device` はデバイス名のみを受け、UDIDを渡すと `Error (DEVICE_NOT_FOUND): No device named <udid>` になる（sim実測）。
 
 ## セッションの実在確認は doctor で行う
 
-- `session list` はアクティブなtvOSセッションを載せないことがある（sim実測: 明示名セッションが使用中でも一覧に出ず、同時に DEVICE_IN_USE はそのセッション名を報告した）。
-- `doctor` は正しく報告する: `✓ session: Active session <name> targets <device>`。ほかにデバイス在庫・Appleツールチェーン・target-appの起動可否・ランナービルドキャッシュを診断し、ブロッカーが無ければ `Doctor: pass` / `No blockers found.`（sim実測）。
+- `session list` はアクティブなtvOSセッションを載せないことがある（実測: sim・実機とも、明示名セッションが使用中でも `{"sessions": []}` を返し、同時に DEVICE_IN_USE はそのセッション名を報告した）。
+- `doctor` は正しく報告する: `✓ session: Active session <name> targets <device>`。ほかにデバイス在庫・Appleツールチェーン・target-appの起動可否・ランナービルドキャッシュを診断し、ブロッカーが無ければ `Doctor: pass` / `No blockers found.`（実測）。
 
 ## capabilities はtvOSでは可否の根拠にならない
 
