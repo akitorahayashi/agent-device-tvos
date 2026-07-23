@@ -33,3 +33,7 @@ audio probe	sim=可（ホスト音声capture。下記）/ device=不可（原文
 - `audio probe start [秒] [bucketMs]` → `stop` で dBFS バケット（`rmsDbfs`/`peakDbfs`）と `heard` を返す。無音は -90 dBFS。
 - 計測対象はアプリ内部音声ではなく、macOSのScreenCaptureKit経由で拾うホストのシステム音声（`backend=macos-screencapturekit source=system-audio`）。他のホストアプリの音も混入する——アプリ固有音の証跡としては使えない。
 - macOSの画面収録（Screen Recording）権限が必要。未許可だと `audio probe requires Screen Recording permission on macOS` で失敗する。
+
+## 画面回転（rotate）
+
+- tvOSは回転を持たない。`rotate <orientation>` は `Error (UNSUPPORTED_OPERATION): rotate is not supported on this device`（Hint: `This command is not available for the selected platform/device.`）で拒否される（sim実測）。

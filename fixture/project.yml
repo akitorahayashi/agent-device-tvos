@@ -1,0 +1,23 @@
+name: AdtvFixture
+options:
+  bundleIdPrefix: com.akitorahayashi
+  deploymentTarget:
+    tvOS: "17.0"
+targets:
+  AdtvFixture:
+    type: application
+    platform: tvOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.adtv-fixture
+        CODE_SIGNING_ALLOWED: "NO"
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: AdtvFixture
+        CFBundleURLTypes:
+          - CFBundleURLName: com.akitorahayashi.adtv-fixture
+            CFBundleURLSchemes:
+              - adtv-fixture

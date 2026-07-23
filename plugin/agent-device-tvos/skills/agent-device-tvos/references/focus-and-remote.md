@@ -18,7 +18,7 @@ tv-remote [press|longpress] <up|down|left|right|select|menu|home|back> [--durati
 
 - 成功報告 `Pressed TV remote <button>` は実効の証明にならない。フォーカスが動かない方向への押下（単一列リストでの水平方向など）も同じ成功を返す。押下後の検証はscreenshotのフォーカスリング視認が既定（visual-truth.md）。
 - `tv-remote` に `--settle` は無い: `Error (INVALID_ARGS): Flag --settle is not supported for command tv-remote.`（実測: CLI層の制約でsim・device同一）。settled diffによる自動検証は無い前提で、押下→キャプチャの手順を組む。
-- セレクタ・座標での押下（press / findのtap）はフォーカス済み要素の内側の点に限り可能（実測: 成功時は `Tapped <selector> (x, y)`）。それ以外への押下の失敗面は環境で割れる: simは `Error (UNSUPPORTED_OPERATION): tap is supported on tvOS only when the requested point is inside the focused element`、実機はランナー再起動を伴う `iOS runner was already restarted during this request and "tap" still failed` になり再起動コストを払う（実測）。フォーカス済み要素への押下は `tv-remote press select` で足りるため、押下はtv-remoteに統一する。
+- セレクタ・座標での押下（press / findのtap）はフォーカス済み要素の内側の点に限り可能（実測: 成功時は `Tapped <selector> (x, y)`）。それ以外への押下の失敗面は環境で割れる: simは `Error (UNSUPPORTED_OPERATION): tap is supported on tvOS only when the requested point is inside the focused element`、実機はランナー再起動を伴う `iOS runner was already restarted during this request and "tap" still failed` になり再起動コストを払う（実測）。フォーカス済み要素への押下は `tv-remote press select` で足りるため、押下はtv-remoteに統一する。ただしSwiftUIの`Button`（例: `.alert`を出すボタン）はフォーカス済みでも `press select` でアクションが発火しないことがあり、`click` もAXのフォーカス枠取得が不安定だと枠内の点でも拒否される（sim実測。alerts.md）。この種のボタン操作は非決定的として扱う。
 
 ## AXによるフォーカス検証（使える条件を先に確かめる）
 

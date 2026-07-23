@@ -1,1 +1,4 @@
 node_modules/
+fixture/.build/
+fixture/*.xcodeproj
+fixture/Info.plist

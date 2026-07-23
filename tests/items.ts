@@ -23,6 +23,7 @@ export interface Item {
   env: string;
   tier: string;
   verified: string;
+  test: string;
   reflected_in: string;
   notes: string;
 }

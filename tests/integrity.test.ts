@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { loadItems, skillDir, TIERS } from './items';
+import { loadItems, repoRoot, skillDir, TIERS } from './items';
 
 describe('items.md の整合性', () => {
   const items = loadItems();
@@ -41,6 +41,36 @@ describe('items.md の整合性', () => {
       if (item.tier === 'out-of-scope') continue;
       expect(item.verified, `${item.id}: verified が空`).toBeTruthy();
       expect(item.env, `${item.id}: env が空`).toBeTruthy();
+    }
+  });
+
+  it('auto 行だけが test を持ち、他 tier は test を持たない', () => {
+    for (const item of items) {
+      if (item.tier === 'auto')
+        expect(
+          item.test && item.test !== '-',
+          `${item.id}: auto なのに test 列が空`,
+        ).toBe(true);
+      else
+        expect(
+          item.test,
+          `${item.id}: 非auto なのに test 列が埋まっている`,
+        ).toBe('-');
+    }
+  });
+
+  it('auto 行の test ファイルが実在し、その中に id が現れる', () => {
+    for (const item of items) {
+      if (item.tier !== 'auto') continue;
+      const file = path.join(repoRoot, item.test);
+      expect(existsSync(file), `${item.id}: ${item.test} が存在しない`).toBe(
+        true,
+      );
+      const body = readFileSync(file, 'utf8');
+      expect(
+        body.includes(item.id),
+        `${item.id}: ${item.test} 中に id が現れない`,
+      ).toBe(true);
     }
   });
 });
