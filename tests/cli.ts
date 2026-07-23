@@ -31,11 +31,15 @@ export async function ad(
 
 export async function simulatorName(): Promise<string> {
   const { out } = await ad(['devices', '--platform', 'ios', '--target', 'tv']);
-  const sims = out
+  const booted = out
     .split('\n')
-    .filter((line) => line.includes('(ios simulator target=tv)'));
-  const [first] = sims;
-  if (!first) throw new Error(`tvOSシミュレータが見つからない:\n${out}`);
-  const chosen = sims.find((line) => line.includes('booted=true')) ?? first;
-  return (chosen.split(' (ios simulator')[0] ?? chosen).trim();
+    .filter((line) => line.includes('(ios simulator target=tv)'))
+    .filter((line) => line.includes('booted=true'));
+  const [only] = booted;
+  if (!only || booted.length !== 1)
+    throw new Error(
+      `起動中のtvOSシミュレータがちょうど1台である必要がある（現在${booted.length}台）。` +
+        `.claude/skills/verification-setup の手順で整えること:\n${out}`,
+    );
+  return (only.split(' (ios simulator')[0] ?? only).trim();
 }
