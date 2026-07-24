@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { loadItems, repoRoot, skillDir, TIERS } from './items';
+import { loadItems, repoRoot, skillDir, TIERS } from '../items';
 
 describe('items.md の整合性', () => {
   const items = loadItems();

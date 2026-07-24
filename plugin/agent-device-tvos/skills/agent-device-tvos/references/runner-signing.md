@@ -56,3 +56,16 @@ xcodebuild build-for-testing \
 ```
 
 `-derivedDataPath` は agent-device のキャッシュ（`~/.agent-device/apple-runner/derived/`）を汚さないよう使い捨ての場所にする。
+
+## 指定チームに自動署名アカウントが無いときの失敗面
+
+署名 env が届いていて（runner.log の xcodebuild 行に指定した `DEVELOPMENT_TEAM=` が載る）、かつ既定チームでもないのに失敗する場合、runner.log には次の2行が対で出る:
+
+```
+error: No Accounts: Add a new account in Accounts settings. (in target 'AgentDeviceRunner' ...)
+error: No profiles for '<runner bundle id>' were found: Xcode couldn't find any tvOS App Development provisioning profiles matching '<runner bundle id>'.
+```
+
+これは指定した team に、この端末で新規プロファイルを自動生成できる対話 Xcode アカウントが無い状態。アプリ本体が同じ team で実機ビルドできていても起きる——本体は既存プロファイルの再利用で通り、ランナーの新規 bundle id はプロファイル新規生成を要するため。配信専用 team やアカウント未ログインの dev team を env に渡すとこの面になる。
+
+復旧は新規生成を避け、「既にランナー用プロファイルが存在する team + bundle」を env に渡す。`~/Library/Developer/Xcode/UserData/Provisioning Profiles`（および `~/Library/MobileDevice/Provisioning Profiles`）配下の各プロファイルを `security cms -D -i <profile>` で復号し、`Platform` が tvOS・`Entitlements:application-identifier` がランナー相当の bundle・`ProvisionedDevices` に対象実機 UUID を含むものを探す。そのプロファイルの team（app-id の接頭）と bundle を `AGENT_DEVICE_IOS_TEAM_ID` / `AGENT_DEVICE_IOS_BUNDLE_ID` に指定すれば、既存プロファイルで署名が通る（`<bundle>.uitests.xctrunner` の対応プロファイルも同様に存在している必要がある）。

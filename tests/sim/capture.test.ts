@@ -16,6 +16,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // 録画中に中断されても host の録画ロックを残さないよう解放する（未録画なら失敗するが無視）。
+  await ad(['record', 'stop', '--session', SESSION]);
   await ad(['close', '--session', SESSION]);
   rmSync(workDir, { recursive: true, force: true });
 });

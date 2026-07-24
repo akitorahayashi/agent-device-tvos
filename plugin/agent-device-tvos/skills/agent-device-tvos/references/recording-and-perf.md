@@ -22,6 +22,7 @@ audio probe	sim=可（ホスト音声capture。下記）/ device=不可（原文
 
 - `record start <path> --scope app` → 操作 → `record stop`。録画は内蔵XCUITestランナー経由なので、録画区間には操作を挟まず画面の自己アニメーションを録るのが安全（sim実測に基づく注意。実機ではpressを挟んだ区間でも正常なmp4が生成された）。押下を含む録画は区間を短く切り、`record stop` のexit codeと成果物の再生可否（duration・寸法）で実態を確認する。
 - mp4はバイナリなので `device-runs/<purpose>/` に出力しても追跡しない（`.gitignore`が`*`）。
+- `record start` が SIGINT/SIGTERM 以外で強制終了されたり `record stop` を経ずに中断されると、シミュレータの CoreSimulator が TVOut ディスプレイの host-recording ロックを握ったまま残る。以降の `record start` は起動直後に `Error (COMMAND_FAILED): failed to stop recording: ... Host recording is already in progress`（`NSPOSIXErrorDomain Code=16 "Resource busy"`）で失敗し続け、mp4 は生成されない。見えている `simctl io ... recordVideo` プロセスを kill しても一時的にしか解けず、確実な解放は当該シミュレータの再起動（`xcrun simctl shutdown <UDID>` → `boot`）（sim実測）。デバイス選択の作法は verification-setup に従い、勝手に別端末を起動しない。
 
 ## perf の注意
 
