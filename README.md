@@ -17,9 +17,11 @@ agent-device-tvos/
 │               ├── SKILL.md     # skill body; name and trigger come from the frontmatter
 │               └── references/  # topic-specific reference documents loaded on demand
 ├── items.md                 # verification item inventory (capability / binding / tier)
-├── tests/                   # auto tier: bun test against the tvOS simulator
+├── tests/
+│   ├── static/               # no environment prerequisite (coverage / integrity)
+│   └── sim/                 # auto-tier tests against the tvOS simulator
 ├── scripts/                 # manual tier checklist printer
-└── package.json             # Bun task runner: test / verify-device / check / fix
+└── package.json             # Bun task runner: test:static / test:sim / verify-device / check / fix
 ```
 
 Skills under the plugin's `skills/` are auto-discovered by Claude Code, so `plugin.json` carries only the plugin's identity and metadata. The verification harness at the repository root maintains the skill's claims; it is not part of the distributed plugin.

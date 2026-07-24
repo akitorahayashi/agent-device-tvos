@@ -4,7 +4,8 @@
   "type": "module",
   "packageManager": "bun@1.3.14",
   "scripts": {
-    "test": "bun test --timeout 360000",
+    "test:static": "bun test tests/static",
+    "test:sim": "bun test tests/sim --timeout 360000",
     "verify-device": "bun scripts/manual-checklist.ts",
     "typecheck": "tsc --noEmit",
     "check": "biome check . && bun run typecheck",

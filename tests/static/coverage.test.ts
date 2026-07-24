@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { execFileSync } from 'node:child_process';
-import { bindingTokens, loadItems } from './items';
+import { bindingTokens, loadItems } from '../items';
 
 function helpCommands(): string[] {
   const out = execFileSync('agent-device', ['help'], { encoding: 'utf8' });

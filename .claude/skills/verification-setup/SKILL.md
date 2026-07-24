@@ -5,7 +5,7 @@ description: agent-device-tvos の検証環境（tvOS シミュレータ + fixtu
 
 # 検証環境セットアップ
 
-auto tier（bun run test）は「起動中の tvOS シミュレータに fixture アプリが導入済み」を前提とする。この前提づくりは環境依存（どのシミュレータを使うか、ツールが入っているか）なので、以下をユーザと確認しながら進める。テスト側は前提を仮定して失敗するだけで、探索や回復はしない。
+auto tier のうち sim テスト（bun run test:sim）は「起動中の tvOS シミュレータに fixture アプリが導入済み」を前提とする。この前提づくりは環境依存（どのシミュレータを使うか、ツールが入っているか）なので、以下をユーザと確認しながら進める。テスト側は前提を仮定して失敗するだけで、探索や回復はしない。items.md の内部整合とカバレッジを検査する静的テスト（bun run test:static）は環境前提なしで独立に回せる。
 
 ## 1. 前提確認
 
@@ -45,9 +45,11 @@ agent-device close --session setup
 ## 3. テスト実行
 
 ```bash
-bun install   # 初回のみ
-bun run test  # auto tier（sim）
+bun install       # 初回のみ
+bun run test:sim  # auto tier（sim。環境前提あり）
 ```
+
+環境前提のない静的テスト（items.md の整合・カバレッジ）は `bun run test:static` で単独に回せる。
 
 失敗した項目は「表面が変わった主張」を意味する。実測で references / SKILL.md を更新し、items.md の verified を更新する（.mx/policy.md のバージョンアップ運用に従う）。
 

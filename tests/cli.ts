@@ -21,10 +21,17 @@ export async function ad(
     });
     return { code: 0, out: `${stdout}${stderr}` };
   } catch (error) {
-    const e = error as { code?: number; stdout?: string; stderr?: string };
+    const e = error as {
+      code?: number;
+      signal?: string;
+      stdout?: string;
+      stderr?: string;
+    };
+    // 打ち切られた子プロセスの途中出力を環境不備と誤認しないよう、シグナルを残す。
+    const killed = e.signal ? `\n[agent-device killed by ${e.signal}]` : '';
     return {
       code: typeof e.code === 'number' ? e.code : 1,
-      out: `${e.stdout ?? ''}${e.stderr ?? ''}`,
+      out: `${e.stdout ?? ''}${e.stderr ?? ''}${killed}`,
     };
   }
 }
